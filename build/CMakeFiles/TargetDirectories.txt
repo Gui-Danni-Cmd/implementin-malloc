@@ -1,0 +1,3 @@
+/home/guilherme/Documentos/WebServerC++/implementMalloc/build/CMakeFiles/malloc.dir
+/home/guilherme/Documentos/WebServerC++/implementMalloc/build/CMakeFiles/edit_cache.dir
+/home/guilherme/Documentos/WebServerC++/implementMalloc/build/CMakeFiles/rebuild_cache.dir
