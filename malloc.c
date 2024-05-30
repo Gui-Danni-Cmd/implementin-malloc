@@ -94,6 +94,8 @@ void _free(void *ptr) {
     block->free = 1;
     ptr = NULL;
     Block *current = free_list;
+    Block* prev = NULL;
+
     while ( current ) {
         if( current->free ){
             Block *next = current->next;
@@ -102,23 +104,48 @@ void _free(void *ptr) {
                 current->next = next->next;
                 next = current->next;
             }
+            if ((void*)current == heap && current->next == NULL) {
+                munmap(heap, HEAP_SIZE);
+                heap = NULL;
+                free_list = NULL;
+                return;
+            }
+
+            if (prev) {
+                prev->next = current->next;
+            } else {
+                free_list = current->next;
+            }
+            munmap(current, current->size + BLOCK_SIZE);
+            return;
         }
+        prev = current;
         current = current->next;
     }
+    if ((void*)current == heap && current->next == NULL) {
+        munmap(heap, HEAP_SIZE);
+        heap = NULL;
+        free_list = NULL;
+        return;
+    }
+    
 }
 
 int main(){
     int *test = (int*) _malloc(sizeof(int));
-    int *ptr = (int*) _malloc(sizeof(int));
-    *ptr = 10;
-    printf("%d\n",*ptr);
-    _free(ptr);
     if( test == NULL) {
         printf("Deu ruim\n");
         exit(EXIT_FAILURE);
     }
-    *test = 1;
+    *test = 10;
     printf("O valor: %d\nEndereço de memoria: %p\n", *test, test);
     _free(test);
+    //printf("O valor: %d\nEndereço de memoria: %p\n", *test, test);
+    char *str = ( char *)_malloc(sizeof(char) * 10); 
+    strncpy(str, "Guilherme", 9);
+    str[10] = '\0';
+    printf("Print %s\n", str);
+
+
     return 0;
 }
